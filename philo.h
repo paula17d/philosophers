@@ -27,25 +27,29 @@ times, the simulation stops. If not specified, the simulation stops when a philo
 typedef struct philo_s
 {
 	int ID;
-	// int last_meal_time;
-	// int last_eat_time; // TODO: not sure if these 2 are needed
-	// int last_sleep_time;
-
-
+	pthread_t thread_philo[200];
+	struct data_s *data;
+	int left_fork;
+	int right_fork;
+	
 } t_philo;
 
 typedef struct data_s
 {	
 	int number_of_philosophers;
-	int time_to_die; // TOOD: check if it's actually an int or sth else
+	int time_to_die; // TODO: replace int 
 	int time_to_eat;
 	int time_to_sleep;
 	int number_of_times_each_philosopher_must_eat;
-
+	pthread_mutex_t mutex;
+	pthread_mutex_t forks; // One mutex per fork
 } t_data;
 
 
 bool parse_input(int argc, char **argv);
+long ft_atoi(const char *str);
+void *routine(void *arg);
+bool create_threads(t_data *data, t_philo *philo);
 void init_structs(int argc, char **argv, t_data *data, t_philo *philo);
 
 #endif

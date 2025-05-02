@@ -6,7 +6,7 @@
 /*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 22:30:08 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/04/23 19:09:28 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/01 15:49:05 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,3 @@ bool parse_input(int argc, char **argv)
 	}
 	return (true);
 }
-
-/*
-structure 
-1. $check string if all digits (and if negative sign in beginning, return error. or do later after atoi)
-2. $convert from string to integer
-3. $check that no higher than INT_MAX
-4. $check that no more than 200 philos
-5. update struct values w those numbers (do in init.c)
-*/
-
-// new: bool -> is like an int but only return true (1) or false (0). makes code cleaner & readable
