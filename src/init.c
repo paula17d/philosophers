@@ -6,21 +6,48 @@
 /*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:41 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/02 20:21:54 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:43:31 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
+// forks mutex
+void init_mutex(t_data *data, t_philo *philo)
+{
+	int i;
+
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		pthread_mutex_init(&philo->data->forks[i], NULL);
+		i++;
+	}
+}
+
+// TODO: move to different file at end
+void destroy_mutex(t_data *data, t_philo *philo)
+{
+	int i;
+
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		pthread_mutex_destroy(&philo->data->forks[i]);
+		i++;
+	}
+}
+
 void init_structs(int argc, char **argv, t_data *data, t_philo *philo)
 {	
 	(void) argc;
+	(void) philo;
 	
 	// PHILO STRUCT
 	philo->ID = 0;
 	philo->data = data;
 	philo->left_fork = 0;
-	philo->right_fork = 0;
+	philo->right_fork = 1;
 	
 	// DATA STRUCT
 	data->number_of_philosophers = ft_atoi(argv[1]);
