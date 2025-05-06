@@ -7,14 +7,17 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 typedef struct data_s
 {	
+	long start_time;
 	int number_of_philosophers;
 	int time_to_die; 
 	int time_to_eat;
 	int time_to_sleep;
 	int number_of_times_each_philosopher_must_eat;
+	pthread_mutex_t print;
 } t_data;
 
 typedef struct philo_s
@@ -36,5 +39,6 @@ void init_mutex(t_data *data, t_philo *philo);
 void destroy_mutex(t_data *data, t_philo *philo);
 t_philo *init_philos(t_data *data);
 t_data *init_data(int argc, char **argv);
+long	get_timestamp_in_ms(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/06 20:27:22 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/06 21:59:58 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,41 @@ The simulation stops when a philosopher dies of starvation.
 If a philosopher waits too long to acquire forks because others are eating, they won’t get a chance to eat before dying.
 they just wait for forks (dont sleep or think)
 */
+
+// calculates time
+void print_message(char *msg, t_philo *philo, t_data *data)
+{
+	long current_time; 
+	
+	current_time = get_timestamp_in_ms() - data->start_time;
+	
+	pthread_mutex_lock(&data->print);
+	printf("%lu %d %s\n", current_time, philo->id, msg);
+	pthread_mutex_unlock(&data->print);
+}
+
+void take_forks(t_philo	*philo, t_data *data)
+{
+	pthread_mutex_lock(&philo->right_fork_own);
+	print_message("has taken a fork", philo, data);
+	pthread_mutex_lock(philo->left_fork_neighbor);
+	print_message("has taken a fork", philo, data);	
+}
+
+void eat(t_philo *philo, t_data *data)
+{
+	print_message("is eating", philo, data);
+	usleep(data->time_to_eat); // TODO: if lots of delay, code own usleep
+}
+
+void put_down_forks(t_philo	*philo, t_data *data)
+{
+	pthread_mutex_unlock(&philo->right_fork_own); 
+	print_message("has put down a fork", philo, data); // TODO: delete (for testing)
+	pthread_mutex_unlock(philo->left_fork_neighbor);
+	print_message("has put down a fork", philo, data); // TODO: delete (for testing)
+}
+
 void *routine(void *arg)
 { 
 	// only one philo bc only one philo is input in one thread creation
@@ -43,36 +78,17 @@ void *routine(void *arg)
 	data = philo->data;
 	
 	// printf("id philo = %d\n", philo->id);
-	
 	if (!philo->id % 2 == 0)
 	{
 		usleep(data->time_to_eat / 2);
 	}
-	pthread_mutex_lock(&philo->right_fork_own);
-	printf("%d has taken a fork\n", philo->id);
-	pthread_mutex_lock(philo->left_fork_neighbor);
-	printf("%d has taken a fork\n", philo->id);
 	
-	pthread_mutex_unlock(&philo->right_fork_own);
-	printf("%d has put down a fork\n", philo->id);
-	pthread_mutex_unlock(philo->left_fork_neighbor);
-	printf("%d has put down a fork\n", philo->id);
+	take_forks(philo, data);
+	eat(philo, data);
+	put_down_forks(philo, data);
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	
 
 
 
@@ -94,10 +110,6 @@ void *routine(void *arg)
 	// think
 		
 
-
-
-
-	
 	
 	// FT: taking forks
 		// routine: even philos start w right fork. uneven w left fork (prevents deadlocks by avoiding circular waiting)

@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:41 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/06 20:19:29 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/06 22:02:07 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 // 	}
 // }
 
-// TODO: move to different file at end
+// TODO: include destroy print mutex
 // void destroy_mutex(t_data *data, t_philo *philo)
 // {
 // 	int i;
@@ -48,6 +48,7 @@ t_data *init_data(int argc, char **argv)
 		return(NULL);
 	}
 
+	data->start_time = get_timestamp_in_ms();
 	data->number_of_philosophers = ft_atoi(argv[1]);
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
@@ -57,7 +58,9 @@ t_data *init_data(int argc, char **argv)
 		data->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	else
 		data->number_of_times_each_philosopher_must_eat = -1;
-
+	
+	pthread_mutex_init(&data->print, NULL);
+	
 	return (data);
 }
 

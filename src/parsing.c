@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 22:30:08 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/01 15:49:05 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/06 20:54:48 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void input_example_message()
 	printf("input example: [number_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [optional: number_of_times_each_philosopher_must_eat]\n");
 }
 
-
 // main for parsing.c
 bool parse_input(int argc, char **argv)
 {
@@ -66,7 +65,7 @@ bool parse_input(int argc, char **argv)
 		return (false); // TODO: use exit or return
 	}
 	// checks # of philosophers
-	if (ft_atoi(argv[1]) > 200)
+	if (ft_atoi(argv[1]) > 200) // TODO: remove
 	{
 		printf("error: too many philosophers (> 200).\n");
 		return (false);
