@@ -5,48 +5,27 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <limits.h>
-
-#ifndef MAX_PHILOS
-# define MAX_PHILOS 200
-#endif
-
-
-/*
-PHILO STRUCT
-- last_meal_time
-- personal ID (ranging from 1 to number_of_philosophers)
-- last_sleep_time (these are to print in terminal line)
-- last_think_time (these are to print in terminal line)
-
-MAIN DATA STRUCT
-- number_of_philosophers 
-- time_to_die
-- time_to_eat
-- time_to_sleep
-- number_of_times_each_philosopher_must_eat (optional argument but do it)
--->  If all philosophers have eaten at least number_of_times_each_philosopher_must_eat
-times, the simulation stops. If not specified, the simulation stops when a philosopher dies.
---> include a death_flag ?
-*/
-
-typedef struct philo_s
-{
-	int ID;
-	pthread_t thread_philo[200];
-	struct data_s *data;
-	int left_fork;
-	int right_fork;
-} t_philo;
+#include <stdlib.h>
+#include <unistd.h>
 
 typedef struct data_s
 {	
 	int number_of_philosophers;
-	int time_to_die; // TODO: replace int 
+	int time_to_die; 
 	int time_to_eat;
 	int time_to_sleep;
 	int number_of_times_each_philosopher_must_eat;
-	pthread_mutex_t forks[MAX_PHILOS]; // One mutex per fork
 } t_data;
+
+typedef struct philo_s
+{
+	int id;
+	pthread_t thread; 
+	pthread_mutex_t  *left_fork_neighbor;
+	pthread_mutex_t  right_fork_own;
+	t_data *data;
+} t_philo;
+
 
 bool parse_input(int argc, char **argv);
 long ft_atoi(const char *str);
@@ -55,5 +34,7 @@ bool create_threads(t_data *data, t_philo *philo);
 void init_structs(int argc, char **argv, t_data *data, t_philo *philo);
 void init_mutex(t_data *data, t_philo *philo);
 void destroy_mutex(t_data *data, t_philo *philo);
+t_philo *init_philos(t_data *data);
+t_data *init_data(int argc, char **argv);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/05 20:13:13 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/06 20:27:22 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,61 @@ they just wait for forks (dont sleep or think)
 */
 void *routine(void *arg)
 { 
+	// only one philo bc only one philo is input in one thread creation
 	t_philo		*philo;
 	t_data		*data;
 
 	philo = (t_philo *)arg;
 	data = philo->data;
 	
+	// printf("id philo = %d\n", philo->id);
+	
+	if (!philo->id % 2 == 0)
+	{
+		usleep(data->time_to_eat / 2);
+	}
+	pthread_mutex_lock(&philo->right_fork_own);
+	printf("%d has taken a fork\n", philo->id);
+	pthread_mutex_lock(philo->left_fork_neighbor);
+	printf("%d has taken a fork\n", philo->id);
+	
+	pthread_mutex_unlock(&philo->right_fork_own);
+	printf("%d has put down a fork\n", philo->id);
+	pthread_mutex_unlock(philo->left_fork_neighbor);
+	printf("%d has put down a fork\n", philo->id);
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 	// ONE PHILO	
 	// take forks
-	pthread_mutex_lock(&philo->data->forks[philo->left_fork]); // FIX SEGV! // assign forks to each philo
-	printf("%d has taken a fork\n", philo->ID);
-	pthread_mutex_lock(&philo->data->forks[philo->right_fork]); 
-	printf("%d has taken a fork\n", philo->ID);
+	// pthread_mutex_lock(&philo->data->forks[philo->left_fork]); // FIX SEGV! // assign forks to each philo
+	// printf("%d has taken a fork\n", philo->ID);
+	// pthread_mutex_lock(&philo->data->forks[philo->right_fork]); 
+	// printf("%d has taken a fork\n", philo->ID);
 	
-	// eat
-	// put down forks
-	pthread_mutex_unlock(&philo->data->forks[philo->left_fork]);
-	printf("%d has put down a fork\n", philo->ID);
-	pthread_mutex_unlock(&philo->data->forks[philo->right_fork]);
-	printf("%d has put down a fork\n", philo->ID);
+	// // eat
+	// // put down forks
+	// pthread_mutex_unlock(&philo->data->forks[philo->left_fork]);
+	// printf("%d has put down a fork\n", philo->ID);
+	// pthread_mutex_unlock(&philo->data->forks[philo->right_fork]);
+	// printf("%d has put down a fork\n", philo->ID);
 	// sleep
 	// think
 		
