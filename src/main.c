@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:48 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/06 20:06:01 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/08 19:05:50 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int main (int argc, char **argv)
 	t_data *data;
 	t_philo *philos;
 
-	data = NULL;
+	// set to NULL in case of free_all
+	data = NULL; 
 	philos = NULL;
 	data = init_data(argc, argv);
 	philos = init_philos(data);

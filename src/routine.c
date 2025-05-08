@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/06 21:59:58 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/08 22:53:32 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-// FT: think
-
-// FT: take forks
-
-// FT: eat
-
-// FT: put down forks
-
-// FT: sleep 
-
 
 /*
 When a philosopher has finished eating, 
@@ -38,11 +27,22 @@ they just wait for forks (dont sleep or think)
 void print_message(char *msg, t_philo *philo, t_data *data)
 {
 	long current_time; 
+	long current_time_lived_philo; // amount of time lived as of now since eating
 	
 	current_time = get_timestamp_in_ms() - data->start_time;
-	
+	current_time_lived_philo = get_timestamp_in_ms() - philo->time_since_eating;
+
 	pthread_mutex_lock(&data->print);
-	printf("%lu %d %s\n", current_time, philo->id, msg);
+	if (current_time_lived_philo > data->time_to_die)
+	{
+		data->death_of_philo = true;
+		printf("%lu %d is dead\n", current_time, philo->id);
+		return;
+	}
+	if (data->death_of_philo == false) 
+	{
+		printf("%lu %d %s\n", current_time, philo->id, msg);
+	}
 	pthread_mutex_unlock(&data->print);
 }
 
@@ -57,7 +57,7 @@ void take_forks(t_philo	*philo, t_data *data)
 void eat(t_philo *philo, t_data *data)
 {
 	print_message("is eating", philo, data);
-	usleep(data->time_to_eat); // TODO: if lots of delay, code own usleep
+	usleep(data->time_to_eat * 1000); // TODO: if lots of delay, code own usleep
 }
 
 void put_down_forks(t_philo	*philo, t_data *data)
@@ -66,6 +66,32 @@ void put_down_forks(t_philo	*philo, t_data *data)
 	print_message("has put down a fork", philo, data); // TODO: delete (for testing)
 	pthread_mutex_unlock(philo->left_fork_neighbor);
 	print_message("has put down a fork", philo, data); // TODO: delete (for testing)
+}
+
+void get_sleep(t_philo *philo, t_data *data)
+{
+	print_message("is sleeping", philo, data);
+	usleep(data->time_to_sleep * 1000); // multiply by 1000 to get ms
+}
+
+void think(t_philo *philo, t_data *data)
+{
+	print_message("is thinking", philo, data);
+}
+
+bool is_dead(t_data *data)
+{
+	pthread_mutex_lock(&data->print);
+	if (data->death_of_philo == false)
+	{
+		pthread_mutex_unlock(&data->print);
+		return (false);
+	}
+	else 
+	{
+		pthread_mutex_unlock(&data->print);
+		return (true);
+	}
 }
 
 void *routine(void *arg)
@@ -78,36 +104,25 @@ void *routine(void *arg)
 	data = philo->data;
 	
 	// printf("id philo = %d\n", philo->id);
-	if (!philo->id % 2 == 0)
+	if (philo->id % 2 == 0)
 	{
-		usleep(data->time_to_eat / 2);
+		usleep((data->time_to_eat * 1000) / 2); // so that even ones wait more (/2)
 	}
 	
-	take_forks(philo, data);
-	eat(philo, data);
-	put_down_forks(philo, data);
-	
+	//time to die nach 30 seg
+	while (is_dead(data) == false)
+	{
+		take_forks(philo, data);	
+		philo->time_since_eating = get_timestamp_in_ms();//20:00 // time is updated to current time after each while iteration
+		eat(philo, data);//20:10 (DONE EATING) // check: if timetodie is smaller than one of the 4 actions, philo dies
+		put_down_forks(philo, data);//20:10
+		get_sleep(philo, data);//20:20
+		exit(0);
+		think(philo, data);//20:40 zeitvergangen = 40 time to die = 30
+	}
 	
 	
 
-
-
-	
-	// ONE PHILO	
-	// take forks
-	// pthread_mutex_lock(&philo->data->forks[philo->left_fork]); // FIX SEGV! // assign forks to each philo
-	// printf("%d has taken a fork\n", philo->ID);
-	// pthread_mutex_lock(&philo->data->forks[philo->right_fork]); 
-	// printf("%d has taken a fork\n", philo->ID);
-	
-	// // eat
-	// // put down forks
-	// pthread_mutex_unlock(&philo->data->forks[philo->left_fork]);
-	// printf("%d has put down a fork\n", philo->ID);
-	// pthread_mutex_unlock(&philo->data->forks[philo->right_fork]);
-	// printf("%d has put down a fork\n", philo->ID);
-	// sleep
-	// think
 		
 
 	
@@ -126,19 +141,6 @@ void *routine(void *arg)
 	// 	printf("has taken left fork\n");
 	// 	pthread_mutex_lock(philo->right_fork);
 	// 	printf("has taken right fork\n");
-	// }
-	
-	
-	// FT: putting down forks
-	// pthread_mutex_unlock(&data->mutex); // TODO: putting down forks
-
-	// while (i < 10000000) //  TODO: change condition (this was jsut from testing)
-	// {
-	// 	pthread_mutex_lock(&data->mutex);
-	// 	mails++; // increment number of mails // TODO: delete
-	// 	printf("mails = %d\n", mails); // TODO: delete
-	// 	pthread_mutex_unlock(&data->mutex); 
-	// 	i++;
 	// }	
 	return (NULL);
 }
@@ -151,12 +153,6 @@ void *routine(void *arg)
 - needs to exist before threads start and persist while they run:
 -- initialize mutex before creating threads
 -- destroy it after all threads finish
-*/
-
-
-/*
-START W ONE PHILO FIRST
-1. include print statements in each action function
 */
 
 /*

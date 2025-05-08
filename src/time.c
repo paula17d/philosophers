@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:12:06 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/06 21:12:10 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/08 19:08:43 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
+// 1972
 long	get_timestamp_in_ms(void) // TODO: adjust
 {
 	struct timeval	tv;

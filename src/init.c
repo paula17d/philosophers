@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:41 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/06 22:02:07 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/08 22:14:10 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_data *init_data(int argc, char **argv)
 		data->number_of_times_each_philosopher_must_eat = -1;
 	
 	pthread_mutex_init(&data->print, NULL);
+	data->death_of_philo = false;
 	
 	return (data);
 }
@@ -81,6 +82,7 @@ t_philo *init_philos(t_data *data)
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
+		philos[i].time_since_eating = get_timestamp_in_ms(); // compile time of progam
 		philos[i].id = i + 1;
 		pthread_mutex_init(&philos[i].right_fork_own, NULL);
 		philos[i].data = data;
@@ -106,21 +108,21 @@ t_philo *init_philos(t_data *data)
 
 bool create_threads(t_data *data, t_philo *philos)
 {
-	int n; // TODO: replace w i
+	int i;
 	
-	n = 0;
-	while (n < data->number_of_philosophers)
+	i = 0;
+	while (i < data->number_of_philosophers)
 	{
-		if (pthread_create(&philos[n].thread, NULL, &routine, &philos[n]) != 0)
+		if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]) != 0) // create a thread (first variable) for each philo in the array (last variable)
 			return (false);
-		n++;
+		i++;
 	}
-	n = 0;
-	while (n < data->number_of_philosophers)
+	i = 0;
+	while (i < data->number_of_philosophers)
 	{
-		if (pthread_join(philos[n].thread, NULL) != 0)
+		if (pthread_join(philos[i].thread, NULL) != 0)
 			return (false); 
-		n++;
+		i++;
 	}
 
 	return (true);
