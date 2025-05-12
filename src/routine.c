@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/08 22:53:32 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/13 01:03:18 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,14 @@ void print_message(char *msg, t_philo *philo, t_data *data)
 	current_time_lived_philo = get_timestamp_in_ms() - philo->time_since_eating;
 
 	pthread_mutex_lock(&data->print);
-	if (current_time_lived_philo > data->time_to_die)
-	{
-		data->death_of_philo = true;
-		printf("%lu %d is dead\n", current_time, philo->id);
-		return;
-	}
+	// added check for death (not needed) (death_monitor already takes care of it)
+	// if (current_time_lived_philo > data->time_to_die && data->death_of_philo == false)
+	// {
+	// 	data->death_of_philo = true;
+	// 	printf("%lu %d died\n", current_time, philo->id);
+	// 	pthread_mutex_unlock(&data->print);
+	// 	return;
+	// }
 	if (data->death_of_philo == false) 
 	{
 		printf("%lu %d %s\n", current_time, philo->id, msg);
@@ -57,21 +59,21 @@ void take_forks(t_philo	*philo, t_data *data)
 void eat(t_philo *philo, t_data *data)
 {
 	print_message("is eating", philo, data);
-	usleep(data->time_to_eat * 1000); // TODO: if lots of delay, code own usleep
+	ft_usleep(data->time_to_eat); // TODO: if lots of delay, code own usleep
 }
 
-void put_down_forks(t_philo	*philo, t_data *data)
+void put_down_forks(t_philo	*philo)
 {
-	pthread_mutex_unlock(&philo->right_fork_own); 
-	print_message("has put down a fork", philo, data); // TODO: delete (for testing)
 	pthread_mutex_unlock(philo->left_fork_neighbor);
-	print_message("has put down a fork", philo, data); // TODO: delete (for testing)
+	pthread_mutex_unlock(&philo->right_fork_own); 
+	// print_message("has put down a fork", philo, data); // TODO: delete (for testing)
+	// print_message("has put down a fork", philo, data); // TODO: delete (for testing)
 }
 
 void get_sleep(t_philo *philo, t_data *data)
 {
 	print_message("is sleeping", philo, data);
-	usleep(data->time_to_sleep * 1000); // multiply by 1000 to get ms
+	ft_usleep(data->time_to_sleep); // multiply by 1000 to get ms
 }
 
 void think(t_philo *philo, t_data *data)
@@ -106,18 +108,20 @@ void *routine(void *arg)
 	// printf("id philo = %d\n", philo->id);
 	if (philo->id % 2 == 0)
 	{
-		usleep((data->time_to_eat * 1000) / 2); // so that even ones wait more (/2)
+		ft_usleep((data->time_to_eat) / 2); // so that even ones wait more (/2)
 	}
 	
 	//time to die nach 30 seg
 	while (is_dead(data) == false)
 	{
+		// ft_usleep(52);
 		take_forks(philo, data);	
+		pthread_mutex_lock(&data->time);
 		philo->time_since_eating = get_timestamp_in_ms();//20:00 // time is updated to current time after each while iteration
+		pthread_mutex_unlock(&data->time);
 		eat(philo, data);//20:10 (DONE EATING) // check: if timetodie is smaller than one of the 4 actions, philo dies
-		put_down_forks(philo, data);//20:10
+		put_down_forks(philo);//20:10
 		get_sleep(philo, data);//20:20
-		exit(0);
 		think(philo, data);//20:40 zeitvergangen = 40 time to die = 30
 	}
 	

@@ -18,6 +18,7 @@ typedef struct data_s
 	int time_to_sleep;
 	int number_of_times_each_philosopher_must_eat;
 	pthread_mutex_t print;
+	pthread_mutex_t time;
 	bool death_of_philo; // true or false
 } t_data;
 
@@ -41,5 +42,6 @@ void destroy_mutex(t_data *data, t_philo *philo);
 t_philo *init_philos(t_data *data);
 t_data *init_data(int argc, char **argv);
 long get_timestamp_in_ms(void);
+void ft_usleep(long millsec);
 
 #endif
