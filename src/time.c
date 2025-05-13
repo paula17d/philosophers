@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:12:06 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/13 01:01:07 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/13 01:11:35 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ void ft_usleep(long millsec) // same input as usleep
     while (get_timestamp_in_ms() < time) 
     {
         // to save resources so its not while all the time
-		usleep(50); 
+		usleep(35); // ex. 500 too much delay (died)
     }
 }

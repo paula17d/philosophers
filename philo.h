@@ -19,7 +19,9 @@ typedef struct data_s
 	int number_of_times_each_philosopher_must_eat;
 	pthread_mutex_t print;
 	pthread_mutex_t time;
+	// pthread_mutex_t meals; // the more mutexes, the more delay bc have to wait here and there again (one entire mutex is better (one wait each not multiple) -> TODO: fix)
 	bool death_of_philo; // true or false
+	int meals_completed;
 } t_data;
 
 typedef struct philo_s
@@ -43,5 +45,11 @@ t_philo *init_philos(t_data *data);
 t_data *init_data(int argc, char **argv);
 long get_timestamp_in_ms(void);
 void ft_usleep(long millsec);
+int	ft_strcmp(const char *s1, const char *s2);
+void put_down_forks(t_philo	*philo);
 
 #endif
+
+
+// TODO: timing fix (needs to show big in visualizer)
+// TODO: add colors in output for each action (like in visualizer)

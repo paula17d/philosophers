@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/13 01:03:18 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/13 22:20:48 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ void print_message(char *msg, t_philo *philo, t_data *data)
 	current_time = get_timestamp_in_ms() - data->start_time;
 	current_time_lived_philo = get_timestamp_in_ms() - philo->time_since_eating;
 
+	// if der letzte 8x+ gegessen hat
+	// mutex so its not incremented or checked at same time
+	// pthread_mutex_lock(&data->meals); // to prevent read & write data race 
+	// pthread_mutex_unlock(&data->meals);
 	pthread_mutex_lock(&data->print);
 	// added check for death (not needed) (death_monitor already takes care of it)
 	// if (current_time_lived_philo > data->time_to_die && data->death_of_philo == false)
@@ -41,6 +45,15 @@ void print_message(char *msg, t_philo *philo, t_data *data)
 	// 	pthread_mutex_unlock(&data->print);
 	// 	return;
 	// }
+	if (ft_strcmp(msg, "is eating") == 1)
+	{
+		data->meals_completed++;	
+	}
+	if (data->meals_completed == (data->number_of_times_each_philosopher_must_eat * data->number_of_philosophers))
+	{
+		data->death_of_philo = true; // also means simulation done basically
+	}
+	
 	if (data->death_of_philo == false) 
 	{
 		printf("%lu %d %s\n", current_time, philo->id, msg);
@@ -60,6 +73,10 @@ void eat(t_philo *philo, t_data *data)
 {
 	print_message("is eating", philo, data);
 	ft_usleep(data->time_to_eat); // TODO: if lots of delay, code own usleep
+	pthread_mutex_lock(&data->print); // write data race: multiple threads could increment at the same time so its only increment one which is wrong (a=3 to a=4 w multiple)
+	data->meals_completed++;
+	pthread_mutex_unlock(&data->print);
+	// printf("**meals completed = %d**\n", data->meals_completed);
 }
 
 void put_down_forks(t_philo	*philo)
@@ -106,8 +123,9 @@ void *routine(void *arg)
 	data = philo->data;
 	
 	// printf("id philo = %d\n", philo->id);
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 0 || (philo->id == data->number_of_philosophers && data->number_of_philosophers != 1))
 	{
+		think(philo, data);
 		ft_usleep((data->time_to_eat) / 2); // so that even ones wait more (/2)
 	}
 	
@@ -126,9 +144,6 @@ void *routine(void *arg)
 	}
 	
 	
-
-		
-
 	
 	// FT: taking forks
 		// routine: even philos start w right fork. uneven w left fork (prevents deadlocks by avoiding circular waiting)
