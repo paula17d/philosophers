@@ -9,6 +9,12 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+# define MSG_INPUT "input example: [number_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [optional: number_of_times_each_philosopher_must_eat]\n"
+# define ERR_ARGS "error: invalid number of arguments.\n"
+# define ERR_PHILOS "error: too many philosophers (> 200).\n"
+# define ERR_NUM "error: arguments must contain only numeric digits (0–9) and represent positive values.\n"
+# define ERR_NUM_MAX "error: argument too large. maximum allowed is 2,147,483,647.\n"
+
 typedef struct data_s
 {	
 	long start_time;

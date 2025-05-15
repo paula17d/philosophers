@@ -6,36 +6,11 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:48 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/13 22:49:46 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/15 20:53:05 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-// int main (int argc, char **argv)
-// {
-// 	// pthread_mutex_t mutex;
-// 	t_data data;
-// 	t_philo philo;
-
-// 	// pthread_t monitor_thread;
-// 	// FT/FILE: initialize structs (individual philo struct & shared data struct)
-// 	if (!parse_input(argc, argv))
-// 		return (1);
-// 	init_structs(argc, argv, &data, &philo);
-// 	init_mutex(&data, &philo);
-// 	// FT/FILE: create monitor_routine
-// 		// pthread_create(&monitor_thread, NULL, monitor_routine, &data);
-// 	// pthread_mutex_init(&data.mutex, NULL);
-// 	// pthread_mutex_init(&data.forks, NULL);
-// 	if (!create_threads(&data, &philo))
-// 		return (1);
-// 	// pthread_join(monitor_thread, NULL); // TODO: check if correct placement
-// 	// pthread_mutex_destroy(&data.mutex);
-// 	destroy_mutex(&data, &philo);
-// 	// pthread_mutex_destroy(&data.forks);
-// 	return (0);
-// }
 
 void free_all(t_data *data, t_philo *philos, char **argv)
 {
@@ -70,6 +45,9 @@ int main (int argc, char **argv)
 	// set to NULL in case of free_all
 	data = NULL; 
 	philos = NULL;
+	
+	if (!parse_input(argc, argv))
+		return (1);
 	data = init_data(argc, argv);
 	philos = init_philos(data);
 	if (!philos || !data)
@@ -86,3 +64,29 @@ int main (int argc, char **argv)
 		
 	return (0);
 }
+
+
+// int main (int argc, char **argv)
+// {
+// 	// pthread_mutex_t mutex;
+// 	t_data data;
+// 	t_philo philo;
+
+// 	// pthread_t monitor_thread;
+// 	// FT/FILE: initialize structs (individual philo struct & shared data struct)
+// 	if (!parse_input(argc, argv))
+// 		return (1);
+// 	init_structs(argc, argv, &data, &philo);
+// 	init_mutex(&data, &philo);
+// 	// FT/FILE: create monitor_routine
+// 		// pthread_create(&monitor_thread, NULL, monitor_routine, &data);
+// 	// pthread_mutex_init(&data.mutex, NULL);
+// 	// pthread_mutex_init(&data.forks, NULL);
+// 	if (!create_threads(&data, &philo))
+// 		return (1);
+// 	// pthread_join(monitor_thread, NULL); // TODO: check if correct placement
+// 	// pthread_mutex_destroy(&data.mutex);
+// 	destroy_mutex(&data, &philo);
+// 	// pthread_mutex_destroy(&data.forks);
+// 	return (0);
+// }
