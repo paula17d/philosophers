@@ -7,6 +7,7 @@ HEADER	=
 
 CC		=	cc
 CFLAGS	=	-Wall -Wextra -Werror 
+# -fsanitize=thread
 # -O2 
 # -g 
 #-fsanitize=thread

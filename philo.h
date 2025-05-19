@@ -25,6 +25,7 @@ typedef struct data_s
 	int number_of_times_each_philosopher_must_eat;
 	pthread_mutex_t print;
 	pthread_mutex_t time;
+	pthread_mutex_t test;
 	// pthread_mutex_t meals; // the more mutexes, the more delay bc have to wait here and there again (one entire mutex is better (one wait each not multiple) -> TODO: fix)
 	bool death_of_philo; // true or false
 	int meals_completed;

@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:41 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/13 22:42:31 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/19 17:29:08 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_data *init_data(int argc, char **argv)
 	
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->time, NULL);
+	pthread_mutex_init(&data->test, NULL);
 	data->death_of_philo = false;
 	data->meals_completed = 0;
 	

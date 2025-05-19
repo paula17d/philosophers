@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/13 22:20:48 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/19 17:36:43 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,17 @@ void print_message(char *msg, t_philo *philo, t_data *data)
 	// 	pthread_mutex_unlock(&data->print);
 	// 	return;
 	// }
-	if (ft_strcmp(msg, "is eating") == 1)
+	if (ft_strcmp(msg, "is eating") == 0 && data->death_of_philo == false)
 	{
 		data->meals_completed++;	
 	}
-	if (data->meals_completed == (data->number_of_times_each_philosopher_must_eat * data->number_of_philosophers))
-	{
-		data->death_of_philo = true; // also means simulation done basically
-	}
 	
-	if (data->death_of_philo == false) 
+	 if (data->meals_completed > (data->number_of_times_each_philosopher_must_eat * data->number_of_philosophers))
+	{
+		data->death_of_philo = true; 
+		// also means simulation done basically
+	}
+	else if (data->death_of_philo == false) 
 	{
 		printf("%lu %d %s\n", current_time, philo->id, msg);
 	}
@@ -73,9 +74,9 @@ void eat(t_philo *philo, t_data *data)
 {
 	print_message("is eating", philo, data);
 	ft_usleep(data->time_to_eat); // TODO: if lots of delay, code own usleep
-	pthread_mutex_lock(&data->print); // write data race: multiple threads could increment at the same time so its only increment one which is wrong (a=3 to a=4 w multiple)
-	data->meals_completed++;
-	pthread_mutex_unlock(&data->print);
+	// pthread_mutex_lock(&data->print); // write data race: multiple threads could increment at the same time so its only increment one which is wrong (a=3 to a=4 w multiple)
+	// data->meals_completed++;
+	// pthread_mutex_unlock(&data->print);
 	// printf("**meals completed = %d**\n", data->meals_completed);
 }
 
@@ -133,12 +134,18 @@ void *routine(void *arg)
 	while (is_dead(data) == false)
 	{
 		// ft_usleep(52);
+	// 	if (data->meals_completed >= (data->number_of_times_each_philosopher_must_eat * data->number_of_philosophers))
+	// {
+	// 	data->death_of_philo = true; // also means simulation done basically
+	// }
+	// pthread_mutex_lock(&data->test);
 		take_forks(philo, data);	
 		pthread_mutex_lock(&data->time);
 		philo->time_since_eating = get_timestamp_in_ms();//20:00 // time is updated to current time after each while iteration
 		pthread_mutex_unlock(&data->time);
 		eat(philo, data);//20:10 (DONE EATING) // check: if timetodie is smaller than one of the 4 actions, philo dies
 		put_down_forks(philo);//20:10
+	// pthread_mutex_unlock(&data->test);
 		get_sleep(philo, data);//20:20
 		think(philo, data);//20:40 zeitvergangen = 40 time to die = 30
 	}
