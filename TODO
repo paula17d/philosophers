@@ -5,7 +5,7 @@ Day	Goals
 2	$✅ Research: Read about the Dining Philosophers problem, threads, and mutexes.
 3	$✅ Implement basic structure: parse arguments, initialize data, create structs.
 4	$✅ Add thread creation for philosophers. They should loop through actions.
-	     -> check create_threads_in_loops
+	     -> check run_simulation_in_loops
 5	*✅ Implement forks using mutexes. Test concurrent access logic. (first do eat, sleep, think. then forks)
 6	✅ Handle timing and philosopher death conditions. Implement monitoring thread.
 7	✅ Add logging (optional but helpful). Handle cleanup of threads and mutexes.

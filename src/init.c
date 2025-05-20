@@ -3,40 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:41 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 18:17:20 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/20 21:38:57 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-// forks mutex
-// void init_mutex(t_data *data, t_philo *philo)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (i < data->number_of_philosophers)
-// 	{
-// 		pthread_mutex_init(&philo->data->forks[i], NULL);
-// 		i++;
-// 	}
-// }
-
-// TODO: include destroy print mutex
-// void destroy_mutex(t_data *data, t_philo *philo)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (i < data->number_of_philosophers)
-// 	{
-// 		pthread_mutex_destroy(&philo->data->forks[i]);
-// 		i++;
-// 	}
-// }
 
 t_data	*init_data(int argc, char **argv)
 {
@@ -59,7 +33,7 @@ t_data	*init_data(int argc, char **argv)
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->time, NULL);
 	pthread_mutex_init(&data->test, NULL);
-	data->death_of_philo = false;
+	data->stop_simulation = false;
 	data->meals_completed = 0;
 	return (data);
 }
@@ -113,14 +87,14 @@ bool	death_monitor(t_philo *philo, t_data *data)
 	current_time_lived_philo = get_timestamp_in_ms() - philo->time_since_eating;
 	pthread_mutex_unlock(&data->time);
 	pthread_mutex_lock(&data->print);
-	if (data->death_of_philo == true)
+	if (data->stop_simulation == true)
 	{
 		pthread_mutex_unlock(&data->print);
 		return (true);
 	}
 	if (current_time_lived_philo > data->time_to_die)
 	{
-		data->death_of_philo = true;
+		data->stop_simulation = true;
 		put_down_forks(philo);
 		printf("%lu %d died\n", current_time, philo->id);
 		pthread_mutex_unlock(&data->print);
@@ -146,27 +120,4 @@ bool	monitor_all_philos(t_philo *philos, t_data *data)
 		if (i == data->number_of_philosophers)
 			i = 0;
 	}
-}
-
-bool	create_threads(t_data *data, t_philo *philos)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->number_of_philosophers)
-	{
-		if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]) != 0)
-			// create a thread (first variable) for each philo in the array (last variable)
-			return (false);
-		i++;
-	}
-	monitor_all_philos(philos, data);
-	i = 0;
-	while (i < data->number_of_philosophers)
-	{
-		if (pthread_join(philos[i].thread, NULL) != 0)
-			return (false);
-		i++;
-	}
-	return (true);
 }

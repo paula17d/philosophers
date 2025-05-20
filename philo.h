@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:32:19 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 18:32:47 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/20 21:38:47 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct data_s
 	pthread_mutex_t	time;
 	pthread_mutex_t	test;
 	// pthread_mutex_t meals; // the more mutexes, the more delay bc have to wait here and there again (one entire mutex is better (one wait each not multiple) -> TODO: fix)
-	bool			death_of_philo; // true or false
+	bool			stop_simulation; // true or false
 	int				meals_completed;
 }					t_data;
 
@@ -56,7 +56,7 @@ typedef struct philo_s
 bool				parse_input(int argc, char **argv);
 long				ft_atoi(const char *str);
 void				*routine(void *arg);
-bool				create_threads(t_data *data, t_philo *philo);
+bool				run_simulation(t_data *data, t_philo *philo);
 void				init_structs(int argc, char **argv, t_data *data,
 						t_philo *philo);
 void				init_mutex(t_data *data, t_philo *philo);
@@ -66,7 +66,18 @@ t_data				*init_data(int argc, char **argv);
 long				get_timestamp_in_ms(void);
 void				ft_usleep(long millsec);
 int					ft_strcmp(const char *s1, const char *s2);
-void				put_down_forks(t_philo *philo);
+void				free_all(t_data *data, t_philo *philos, char **argv);
+
+// routine
+void	take_forks(t_philo *philo, t_data *data);
+void	eat(t_philo *philo, t_data *data);
+void	put_down_forks(t_philo *philo);
+void	get_sleep(t_philo *philo, t_data *data);
+void	think(t_philo *philo, t_data *data);
+
+// death monitor
+bool	monitor_all_philos(t_philo *philos, t_data *data);
+bool	is_dead(t_data *data);
 
 #endif
 

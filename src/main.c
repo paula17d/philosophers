@@ -3,44 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:48 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 18:17:49 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/20 21:16:30 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void	free_all(t_data *data, t_philo *philos, char **argv)
-{
-	int	i;
-
-	if (data != NULL)
-	{
-		pthread_mutex_destroy(&data->print);
-		pthread_mutex_destroy(&data->time);
-		free(data);
-	}
-	i = 0;
-	if (philos != NULL)
-	{
-		while (i < ft_atoi(argv[1]))
-		{
-			pthread_mutex_destroy(&philos[i].right_fork_own);
-			// pthread_mutex_destroy(&philos[i].left_fork_neighbor); // -> not needed bc pointer to above same mutex
-			i++;
-		}
-		free(philos);
-	}
-}
-
+/*
+parse input and initialize all structs from header file.
+-> in case of initialization failure free everything.
+runs the full philosophers simulation.
+free everything.
+*/ 
 int	main(int argc, char **argv)
 {
 	t_data	*data;
 	t_philo	*philos;
 
-	// set to NULL in case of free_all
+	// set to NULL in case of free_all (variables need to have value)
 	data = NULL;
 	philos = NULL;
 	if (!parse_input(argc, argv))
@@ -55,32 +38,7 @@ int	main(int argc, char **argv)
 	// 	printf("id philo = %d\n", philos[i].id);
 	// 	i++;
 	// }
-	create_threads(data, philos);
+	run_simulation(data, philos); // formerly create_threads
 	free_all(data, philos, argv);
 	return (0);
 }
-
-// int main (int argc, char **argv)
-// {
-// 	// pthread_mutex_t mutex;
-// 	t_data data;
-// 	t_philo philo;
-
-// 	// pthread_t monitor_thread;
-// 	// FT/FILE: initialize structs (individual philo struct & shared data struct)
-// 	if (!parse_input(argc, argv))
-// 		return (1);
-// 	init_structs(argc, argv, &data, &philo);
-// 	init_mutex(&data, &philo);
-// 	// FT/FILE: create monitor_routine
-// 		// pthread_create(&monitor_thread, NULL, monitor_routine, &data);
-// 	// pthread_mutex_init(&data.mutex, NULL);
-// 	// pthread_mutex_init(&data.forks, NULL);
-// 	if (!create_threads(&data, &philo))
-// 		return (1);
-// 	// pthread_join(monitor_thread, NULL); // TODO: check if correct placement
-// 	// pthread_mutex_destroy(&data.mutex);
-// 	destroy_mutex(&data, &philo);
-// 	// pthread_mutex_destroy(&data.forks);
-// 	return (0);
-// }

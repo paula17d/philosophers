@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   routine_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 18:19:06 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/20 21:45:05 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,25 @@ void	print_message(char *msg, t_philo *philo, t_data *data)
 	// pthread_mutex_unlock(&data->meals);
 	pthread_mutex_lock(&data->print);
 	// added check for death (not needed) (death_monitor already takes care of it)
-	// if (current_time_lived_philo > data->time_to_die && data->death_of_philo == false)
+	// if (current_time_lived_philo > data->time_to_die && data->stop_simulation == false)
 	// {
-	// 	data->death_of_philo = true;
+	// 	data->stop_simulation = true;
 	// 	printf("%lu %d died\n", current_time, philo->id);
 	// 	pthread_mutex_unlock(&data->print);
 	// 	return ;
 	// }
-	if (ft_strcmp(msg, "is eating") == 0 && data->death_of_philo == false)
+	// first two ifs (meals completed) only need to be tracked when last arg exists (!= -1)
+	if (ft_strcmp(msg, "is eating") == 0 && data->stop_simulation == false && data->number_of_times_each_philosopher_must_eat != -1)
 	{
 		data->meals_completed++;
 	}
 	if (data->meals_completed > (data->number_of_times_each_philosopher_must_eat
-			* data->number_of_philosophers))
+			* data->number_of_philosophers) && data->number_of_times_each_philosopher_must_eat != -1) //+0 > -1 * 3 => +0>-3
 	{
-		data->death_of_philo = true;
+		data->stop_simulation = true; // death_of_philo renamed to stop_simulation 
 		// also means simulation done basically
 	}
-	else if (data->death_of_philo == false)
+	else if (data->stop_simulation == false)
 	{
 		printf("%lu %d %s\n", current_time, philo->id, msg);
 	}
@@ -106,7 +107,7 @@ void	think(t_philo *philo, t_data *data)
 bool	is_dead(t_data *data)
 {
 	pthread_mutex_lock(&data->print);
-	if (data->death_of_philo == false)
+	if (data->stop_simulation == false)
 	{
 		pthread_mutex_unlock(&data->print);
 		return (false);
@@ -116,62 +117,6 @@ bool	is_dead(t_data *data)
 		pthread_mutex_unlock(&data->print);
 		return (true);
 	}
-}
-
-void	*routine(void *arg)
-{
-	t_philo	*philo;
-	t_data	*data;
-
-	// only one philo bc only one philo is input in one thread creation
-	philo = (t_philo *)arg;
-	data = philo->data;
-	// printf("id philo = %d\n", philo->id);
-	if (philo->id % 2 == 0 || (philo->id == data->number_of_philosophers
-			&& data->number_of_philosophers != 1))
-	{
-		think(philo, data);
-		ft_usleep((data->time_to_eat) / 2); // so that even ones wait more (/2)
-	}
-	// time to die nach 30 seg
-	while (is_dead(data) == false)
-	{
-		// ft_usleep(52);
-		// 	if (data->meals_completed >= (data->number_of_times_each_philosopher_must_eat * data->number_of_philosophers))
-		// {
-		// 	data->death_of_philo = true; // also means simulation done basically
-		// }
-		// pthread_mutex_lock(&data->test);
-		take_forks(philo, data);
-		pthread_mutex_lock(&data->time);
-		philo->time_since_eating = get_timestamp_in_ms(); // 20:00
-			// time is updated to current time after each while iteration
-		pthread_mutex_unlock(&data->time);
-		eat(philo, data);      // 20:10 (DONE EATING)
-			// check: if timetodie is smaller than one of the 4 actions, philo dies
-		put_down_forks(philo); // 20:10
-		// pthread_mutex_unlock(&data->test);
-		get_sleep(philo, data); // 20:20
-		think(philo, data);     // 20:40 zeitvergangen = 40 time to die = 30
-	}
-	// FT: taking forks
-	// routine: even philos start w right fork. uneven w left fork (prevents deadlocks by avoiding circular waiting)
-	// if (philo->ID % 2 == 0)
-	// {
-	// 	pthread_mutex_lock(&philo->data->forks[left_fork]);
-			// TODO: all of this below needs fixing...
-	// 	printf("has taken right fork\n");
-	// 	pthread_mutex_lock(philo->left_fork);
-	// 	printf("has taken left fork\n");
-	// }
-	// else
-	// {
-	// 	pthread_mutex_lock(philo->left_fork);
-	// 	printf("has taken left fork\n");
-	// 	pthread_mutex_lock(philo->right_fork);
-	// 	printf("has taken right fork\n");
-	// }
-	return (NULL);
 }
 
 // MUTEX:

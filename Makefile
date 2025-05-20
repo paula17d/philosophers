@@ -6,8 +6,7 @@ BONUS_NAME	= 	_bonus
 HEADER	=	
 
 CC		=	cc
-CFLAGS	=	-Wall -Wextra -Werror 
-# -fsanitize=thread
+CFLAGS	=	-Wall -Wextra -Werror
 # -O2 
 # -g 
 #-fsanitize=thread
@@ -17,7 +16,7 @@ OBJ_DIR			=	src_o
 SRC_BONUS_DIR	=	src_bonus
 OBJ_BONUS_DIR	=	src_bonus_o
 
-SRC_FILES		=	main.c parsing.c init.c routine.c time.c utils.c
+SRC_FILES		=	main.c parsing.c init.c routine_utils.c time.c utils.c death_monitor.c simulation.c
 SRC_BONUS_FILES	=
 
 SRC			=	$(addprefix $(SRC_DIR)/, $(SRC_FILES))
