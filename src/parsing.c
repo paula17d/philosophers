@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 22:30:08 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/15 22:11:33 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/20 18:18:10 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ long	ft_atoi(const char *str)
 
 	i = 0;
 	result = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || \
-	str[i] == '\r' || str[i] == '\f' || str[i] == '\v')
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\r'
+		|| str[i] == '\f' || str[i] == '\v')
 		i++;
 	if (str[i] == '+')
 	{
@@ -34,14 +34,13 @@ long	ft_atoi(const char *str)
 	return (result);
 }
 
-bool is_digit_string(char *str)
+bool	is_digit_string(char *str)
 {
-	int i;
-	
+	int	i;
+
 	// if str is empty \0
 	if (str[0] == '\0')
 		return (false);
-
 	i = 0;
 	while (str && str[i] != '\0')
 	{
@@ -68,7 +67,7 @@ bool is_digit_string(char *str)
 // 	va_end(args);
 // }
 
-void print_messages(char *msg1, char *msg2)
+void	print_messages(char *msg1, char *msg2)
 {
 	if (msg1)
 		printf("%s", msg1);
@@ -77,16 +76,16 @@ void print_messages(char *msg1, char *msg2)
 }
 
 // main for parsing.c
-bool parse_input(int argc, char **argv)
+bool	parse_input(int argc, char **argv)
 {
-	int i;
+	int	i;
+
 	// checks # of arguments
 	if (argc < 5 || argc > 6)
 	{
 		print_messages(ERR_ARGS, MSG_INPUT);
 		return (false); // TODO: use exit or return
 	}
-	
 	// checks # of philosophers
 	if (ft_atoi(argv[1]) > 200) // TODO: remove
 	{

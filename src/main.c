@@ -3,26 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:48 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/15 20:53:05 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/20 18:17:49 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void free_all(t_data *data, t_philo *philos, char **argv)
+void	free_all(t_data *data, t_philo *philos, char **argv)
 {
-	int i;
-	
+	int	i;
+
 	if (data != NULL)
 	{
 		pthread_mutex_destroy(&data->print);
 		pthread_mutex_destroy(&data->time);
 		free(data);
 	}
-
 	i = 0;
 	if (philos != NULL)
 	{
@@ -30,29 +29,26 @@ void free_all(t_data *data, t_philo *philos, char **argv)
 		{
 			pthread_mutex_destroy(&philos[i].right_fork_own);
 			// pthread_mutex_destroy(&philos[i].left_fork_neighbor); // -> not needed bc pointer to above same mutex
-			i++;	
+			i++;
 		}
-
 		free(philos);
 	}
 }
 
-int main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_data *data;
-	t_philo *philos;
+	t_data	*data;
+	t_philo	*philos;
 
 	// set to NULL in case of free_all
-	data = NULL; 
+	data = NULL;
 	philos = NULL;
-	
 	if (!parse_input(argc, argv))
 		return (1);
 	data = init_data(argc, argv);
 	philos = init_philos(data);
 	if (!philos || !data)
 		return (free_all(data, philos, argv), 1);
-	
 	// int i = 0;
 	// while (i < data->number_of_philosophers)
 	// {
@@ -61,10 +57,8 @@ int main (int argc, char **argv)
 	// }
 	create_threads(data, philos);
 	free_all(data, philos, argv);
-		
 	return (0);
 }
-
 
 // int main (int argc, char **argv)
 // {
