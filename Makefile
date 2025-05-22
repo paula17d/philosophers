@@ -6,17 +6,14 @@ BONUS_NAME	= 	_bonus
 HEADER	=	
 
 CC		=	cc
-CFLAGS	=	-Wall -Wextra -Werror
-# -O2 
-# -g 
-#-fsanitize=thread
+CFLAGS	=	-Wall -Wextra -Werror -O2 -g -fsanitize=thread
 
 SRC_DIR			=	src
 OBJ_DIR			=	src_o
 SRC_BONUS_DIR	=	src_bonus
 OBJ_BONUS_DIR	=	src_bonus_o
 
-SRC_FILES		=	main.c parsing.c init.c routine_utils.c time.c utils.c death_monitor.c simulation.c
+SRC_FILES		=	main.c parsing.c init.c routine.c philo_actions.c time.c utils.c death_monitor.c simulation.c print_message.c
 SRC_BONUS_FILES	=
 
 SRC			=	$(addprefix $(SRC_DIR)/, $(SRC_FILES))
@@ -24,21 +21,6 @@ OBJ			=	$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 SRC_BONUS	=	$(addprefix $(SRC_BONUS_DIR)/, $(SRC_BONUS_FILES))
 OBJ_BONUS	=	$(patsubst $(SRC_BONUS_DIR)/%.c, $(OBJ_BONUS_DIR)/%.o, $(SRC_BONUS))
 
-# COLORS
-BLUE	= 	\033[38;5;27m
-CYAN	= 	\033[38;5;51m
-PINK	=	 \033[38;5;211m
-GREEN	= 	\033[38;5;72m
-TURQ	= 	\033[38;5;37m
-WHITE	= 	\033[38;5;15m
-YELLOW	= 	\033[38;5;220m
-C		=	\033[38;5;
-O		=	37
-L		=	m
-SHIFT	=	$(eval O=$(shell echo $$((($(O)%13)+1))))
-
-LBOR	=	"▌│█║▌║▌║ "
-RBOR	= 	" ║▌║▌║█│▌"
 
 $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
@@ -52,18 +34,16 @@ $(OBJ_DIR):
 %.o: %.c $(HEADER)
 	@$(CC) $(FLAGS) -c $< -o $@
 
+all: $(NAME)
+
 clean:
-	@echo "\n\t   $(PINK)$(LBOR)Cleaning$(RBOR)$(WHITE)\n"
 	@rm -rf $(OBJ_DIR) $(OBJ_BONUS_DIR)
 
 fclean: clean
-	@echo "\n\t   $(CYAN)$(LBOR)Clean af$(RBOR)$(WHITE)\n"
 	@rm -rf $(NAME) $(BONUS_NAME)
 	@rm -rf screenshot.bmp
 
 re:
-	@echo "\n\t$(BLUE)$(LBOR)Awwwww shiiiiiit$(RBOR)$(WHITE)\n"
-	@echo "\n\t$(BLUE)$(LBOR)Here we go again$(RBOR)$(WHITE)\n"
 	@$(MAKE) fclean
 	@$(MAKE) all
 

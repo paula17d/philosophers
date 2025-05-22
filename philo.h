@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:32:19 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 21:38:47 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/22 20:31:53 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ typedef struct data_s
 	int				number_of_times_each_philosopher_must_eat;
 	pthread_mutex_t	print;
 	pthread_mutex_t	time;
-	pthread_mutex_t	test;
-	// pthread_mutex_t meals; // the more mutexes, the more delay bc have to wait here and there again (one entire mutex is better (one wait each not multiple) -> TODO: fix)
-	bool			stop_simulation; // true or false
+	bool			stop_simulation;
 	int				meals_completed;
 }					t_data;
 
@@ -50,7 +48,7 @@ typedef struct philo_s
 	pthread_mutex_t	*left_fork_neighbor;
 	pthread_mutex_t	right_fork_own;
 	t_data			*data;
-	long			time_since_eating;
+	long			time_of_eating;
 }					t_philo;
 
 bool				parse_input(int argc, char **argv);
@@ -67,6 +65,7 @@ long				get_timestamp_in_ms(void);
 void				ft_usleep(long millsec);
 int					ft_strcmp(const char *s1, const char *s2);
 void				free_all(t_data *data, t_philo *philos, char **argv);
+void				print_message(char *msg, t_philo *philo, t_data *data);
 
 // routine
 void	take_forks(t_philo *philo, t_data *data);
@@ -77,9 +76,7 @@ void	think(t_philo *philo, t_data *data);
 
 // death monitor
 bool	monitor_all_philos(t_philo *philos, t_data *data);
-bool	is_dead(t_data *data);
+bool    death_monitor(t_philo *philo, t_data *data);
+bool	get_stop_simulation_value(t_data *data);
 
 #endif
-
-// TODO: timing fix (needs to show big in visualizer)
-// TODO: add colors in output for each action (like in visualizer)

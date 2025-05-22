@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:12:06 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/20 18:20:09 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:36:56 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-// calculates milliseconds since 1972
+// calculates milliseconds passed since 1972
 long	get_timestamp_in_ms(void) // TODO: adjust
 {
 	struct timeval tv;
@@ -23,7 +23,7 @@ long	get_timestamp_in_ms(void) // TODO: adjust
 	return (time_in_ms);
 }
 
-// own calculated usleep to have no delay (in terminal output)
+// own calculated usleep to have no delay
 void	ft_usleep(long millsec) // same input as usleep
 {
 	long	time;

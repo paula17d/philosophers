@@ -6,7 +6,7 @@
 /*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:16:41 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 21:38:57 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/22 20:32:30 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ t_data	*init_data(int argc, char **argv)
 		data->number_of_times_each_philosopher_must_eat = -1;
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->time, NULL);
-	pthread_mutex_init(&data->test, NULL);
 	data->stop_simulation = false;
 	data->meals_completed = 0;
 	return (data);
@@ -53,7 +52,7 @@ t_philo	*init_philos(t_data *data)
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
-		philos[i].time_since_eating = get_timestamp_in_ms();
+		philos[i].time_of_eating = get_timestamp_in_ms();
 			// compile time of progam
 		philos[i].id = i + 1;
 		pthread_mutex_init(&philos[i].right_fork_own, NULL);
@@ -74,50 +73,4 @@ t_philo	*init_philos(t_data *data)
 		i++;
 	}
 	return (philos);
-}
-
-// checks if a philo has exceeded timetodie and sets death to true
-bool	death_monitor(t_philo *philo, t_data *data)
-{
-	long	current_time;
-	long	current_time_lived_philo;
-
-	current_time = get_timestamp_in_ms() - data->start_time;
-	pthread_mutex_lock(&data->time);
-	current_time_lived_philo = get_timestamp_in_ms() - philo->time_since_eating;
-	pthread_mutex_unlock(&data->time);
-	pthread_mutex_lock(&data->print);
-	if (data->stop_simulation == true)
-	{
-		pthread_mutex_unlock(&data->print);
-		return (true);
-	}
-	if (current_time_lived_philo > data->time_to_die)
-	{
-		data->stop_simulation = true;
-		put_down_forks(philo);
-		printf("%lu %d died\n", current_time, philo->id);
-		pthread_mutex_unlock(&data->print);
-		return (true);
-	}
-	pthread_mutex_unlock(&data->print);
-	return (false);
-}
-
-// checks if death of a philo has occured
-bool	monitor_all_philos(t_philo *philos, t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (1)
-	{
-		if (death_monitor(&philos[i], data) == true)
-		{
-			return (true);
-		}
-		i++;
-		if (i == data->number_of_philosophers)
-			i = 0;
-	}
 }
