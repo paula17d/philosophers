@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:32:19 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/22 20:31:53 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 17:53:58 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,15 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define MSG_INPUT "input example: [number_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [optional: number_of_times_each_philosopher_must_eat]\n"
+# define MSG_INPUT "input example: [number_of_philosophers] [time_to_die] \
+					[time_to_eat] [time_to_sleep] \
+					[optional: number_of_times_each_philosopher_must_eat]\n"
 # define ERR_ARGS "error: invalid number of arguments.\n"
 # define ERR_PHILOS "error: too many philosophers (> 200).\n"
-# define ERR_NUM "error: arguments must contain only numeric digits (0–9) and represent positive values.\n"
-# define ERR_NUM_MAX "error: argument too large. maximum allowed is 2,147,483,647.\n"
+# define ERR_NUM "error: arguments must contain only numeric digits (0–9) \
+					and represent positive values.\n"
+# define ERR_NUM_MAX "error: argument too large. maximum allowed \
+						is 2,147,483,647.\n"
 
 typedef struct data_s
 {
@@ -51,32 +55,38 @@ typedef struct philo_s
 	long			time_of_eating;
 }					t_philo;
 
+// parsing
 bool				parse_input(int argc, char **argv);
-long				ft_atoi(const char *str);
-void				*routine(void *arg);
-bool				run_simulation(t_data *data, t_philo *philo);
-void				init_structs(int argc, char **argv, t_data *data,
-						t_philo *philo);
-void				init_mutex(t_data *data, t_philo *philo);
-void				destroy_mutex(t_data *data, t_philo *philo);
 t_philo				*init_philos(t_data *data);
 t_data				*init_data(int argc, char **argv);
-long				get_timestamp_in_ms(void);
-void				ft_usleep(long millsec);
-int					ft_strcmp(const char *s1, const char *s2);
-void				free_all(t_data *data, t_philo *philos, char **argv);
-void				print_message(char *msg, t_philo *philo, t_data *data);
+long				ft_atoi(const char *str);
+
+// simulation
+bool				run_simulation(t_data *data, t_philo *philo);
 
 // routine
-void	take_forks(t_philo *philo, t_data *data);
-void	eat(t_philo *philo, t_data *data);
-void	put_down_forks(t_philo *philo);
-void	get_sleep(t_philo *philo, t_data *data);
-void	think(t_philo *philo, t_data *data);
+void				*routine(void *arg);
+void				take_forks(t_philo *philo, t_data *data);
+void				eat(t_philo *philo, t_data *data);
+void				put_down_forks(t_philo *philo);
+void				get_sleep(t_philo *philo, t_data *data);
+void				think(t_philo *philo, t_data *data);
+
+// print message
+void				print_message(char *msg, t_philo *philo, t_data *data);
+
+// time
+long				get_timestamp_in_ms(void);
+void				ft_usleep(long millsec);
 
 // death monitor
-bool	monitor_all_philos(t_philo *philos, t_data *data);
-bool    death_monitor(t_philo *philo, t_data *data);
-bool	get_stop_simulation_value(t_data *data);
+bool				monitor_all_philos(t_philo *philos, t_data *data);
+bool				death_monitor(t_philo *philo, t_data *data);
+bool				get_stop_simulation_value(t_data *data);
+
+// free & utils
+void				free_all(t_data *data, t_philo *philos, char **argv);
+void				destroy_mutex(t_data *data, t_philo *philo);
+int					ft_strcmp(const char *s1, const char *s2);
 
 #endif

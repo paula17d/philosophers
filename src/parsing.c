@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 22:30:08 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 20:54:53 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 21:16:30 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ bool	parse_input(int argc, char **argv)
 		print_messages(ERR_ARGS, MSG_INPUT);
 		return (false);
 	}
-
 	i = 1;
 	while (argv != NULL && argv[i] != NULL)
 	{

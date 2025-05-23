@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   death_monitor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 21:05:41 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/22 20:58:33 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 17:30:11 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
 /*
-goes through an infinite loop of all philosophers checking if their death occurred
-through the death_monitor.
+goes through an infinite loop of all philosophers checking
+if their death occurred through the death_monitor.
 */
 bool	monitor_all_philos(t_philo *philos, t_data *data)
 {
@@ -71,8 +71,9 @@ bool	death_monitor(t_philo *philo, t_data *data)
 bool	get_stop_simulation_value(t_data *data)
 {
 	pthread_mutex_lock(&data->print);
-    if (data->meals_completed > (data->number_of_times_each_philosopher_must_eat
-			* data->number_of_philosophers) && data->number_of_times_each_philosopher_must_eat != -1)
+	if (data->meals_completed > (data->number_of_times_each_philosopher_must_eat
+			* data->number_of_philosophers)
+		&& data->number_of_times_each_philosopher_must_eat != -1)
 	{
 		data->stop_simulation = true;
 	}

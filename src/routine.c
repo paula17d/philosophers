@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 20:26:26 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/22 20:51:48 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 17:32:34 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
 
 /*
 routine for one philosopher.
@@ -19,8 +18,8 @@ routine for one philosopher.
   they think/wait before starting (to avoid deadlocks with forks).
 - then, they loop through the routine:
   take forks → update eating time → eat → put down forks → sleep → think.
-- the eating timestamp update (before meal) is protected by a mutex to prevent race conditions
-  with the death monitor, which reads the same value.
+- the eating timestamp update (before meal) is protected by a mutex to prevent
+  race conditions with the death monitor, which reads the same value.
 - the loop continues until the simulation is stopped -> a philosopher dies.
 */
 void	*routine(void *arg)
@@ -30,24 +29,22 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-
 	if (philo->id % 2 == 0 || (philo->id == data->number_of_philosophers
 			&& data->number_of_philosophers != 1))
 	{
 		think(philo, data);
 		ft_usleep((data->time_to_eat) / 2);
 	}
-
 	while (get_stop_simulation_value(data) == false)
 	{
 		take_forks(philo, data);
-		pthread_mutex_lock(&data->time); // QUESTION: why? lock etc.
+		pthread_mutex_lock(&data->time);
 		philo->time_of_eating = get_timestamp_in_ms();
 		pthread_mutex_unlock(&data->time);
-		eat(philo, data); 
+		eat(philo, data);
 		put_down_forks(philo);
 		get_sleep(philo, data);
-		think(philo, data);    
+		think(philo, data);
 	}
 	return (NULL);
 }

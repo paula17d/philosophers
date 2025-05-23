@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:17:03 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/20 19:53:42 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 21:15:55 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (s1[i] - s2[i]);
 }
 
+/*
+destroys all mutexes and frees the data and philo struct.
+note: left_fork_neighbor mutex does not need to be destroyed 
+since it is only a pointer to the right_fork_own.
+*/
 void	free_all(t_data *data, t_philo *philos, char **argv)
 {
 	int	i;
@@ -40,7 +45,6 @@ void	free_all(t_data *data, t_philo *philos, char **argv)
 		while (i < ft_atoi(argv[1]))
 		{
 			pthread_mutex_destroy(&philos[i].right_fork_own);
-			// pthread_mutex_destroy(&philos[i].left_fork_neighbor); // -> not needed bc pointer to above same mutex
 			i++;
 		}
 		free(philos);

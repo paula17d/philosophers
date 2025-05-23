@@ -3,39 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:12:06 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/22 20:36:56 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 21:37:09 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
 // calculates milliseconds passed since 1972
-long	get_timestamp_in_ms(void) // TODO: adjust
+long	get_timestamp_in_ms(void)
 {
-	struct timeval tv;
-	long	time_in_ms;
+	struct timeval	current_time;
+	long			time_in_ms;
 
-	gettimeofday(&tv, NULL);
-	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	gettimeofday(&current_time, NULL);
+	time_in_ms = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
 	return (time_in_ms);
 }
 
-// own calculated usleep to have no delay
-void	ft_usleep(long millsec) // same input as usleep
+/*
+custom sleep function that pauses execution for the given number of milliseconds
+to avoid delay from the original usleep.
+- calculates a target timestamp by adding the sleep duration to the current time.
+- continuously checks the current time until the target is reached.
+--> every 35ms if the full ex. 200ms has passed — more accurate.
+--> ensures that sleep duration is as close as possible to the requested value.
+- ensures more accurate timing than using `usleep(millsec * 1000)` directly,
+   which can be too imprecise.
+*/
+void	ft_usleep(long millsec)
 {
 	long	time;
 
-	// aktuelle zeit + zeit die geschlafen wird
 	time = get_timestamp_in_ms() + millsec;
-	// goes on as long as its not time where its supposed to stop from above
-	// NOT !=, bc sometimes it can be one ms above and continues to grow
-	// so its gotta be smaller
 	while (get_timestamp_in_ms() < time)
 	{
-		// to save resources so its not while all the time
-		usleep(35); // ex. 500 too much delay (died)
+		usleep(35);
 	}
 }

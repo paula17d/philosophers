@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_actions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:17:00 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/05/22 20:28:47 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/05/23 17:31:04 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,3 @@ void	think(t_philo *philo, t_data *data)
 {
 	print_message("is thinking", philo, data);
 }
-

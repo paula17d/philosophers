@@ -1,4 +1,3 @@
-# TODO: FIX/REMAKE NEW
 
 NAME		=	philo
 BONUS_NAME	= 	_bonus
@@ -6,7 +5,8 @@ BONUS_NAME	= 	_bonus
 HEADER	=	
 
 CC		=	cc
-CFLAGS	=	-Wall -Wextra -Werror -O2 -g -fsanitize=thread
+CFLAGS	=	-Wall -Wextra -Werror 
+#-O2 -g -fsanitize=thread
 
 SRC_DIR			=	src
 OBJ_DIR			=	src_o
