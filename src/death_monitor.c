@@ -6,7 +6,7 @@
 /*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 21:05:41 by pauladretta       #+#    #+#             */
-/*   Updated: 2025/05/23 17:30:11 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/05/24 16:02:13 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ bool	death_monitor(t_philo *philo, t_data *data)
 	if (current_time_lived_philo > data->time_to_die)
 	{
 		data->stop_simulation = true;
-		put_down_forks(philo);
+		// put_down_forks(philo); // DELETE (DORKER VALGRIND) 
 		printf("%lu %d died\n", time_since_start_simulation, philo->id);
 		pthread_mutex_unlock(&data->print);
 		return (true);
